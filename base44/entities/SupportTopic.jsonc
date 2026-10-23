@@ -1,0 +1,32 @@
+{
+  "name": "SupportTopic",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+    },
+    "description": {
+      "type": "string",
+    },
+    "icon": {
+      "type": "string",
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "emotional",
+        "relationships",
+        "stress",
+        "grief",
+        "faith",
+        "other",
+      ],
+      "default": "emotional",
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+    },
+  },
+  "required": ["name"],
+}

@@ -1,0 +1,60 @@
+{
+  "name": "SessionRequest",
+  "type": "object",
+  "properties": {
+    "seeker_id": {
+      "type": "string",
+    },
+    "seeker_nickname": {
+      "type": "string",
+    },
+    "topic_id": {
+      "type": "string",
+    },
+    "topic_name": {
+      "type": "string",
+    },
+    "session_type": {
+      "type": "string",
+      "enum": ["text", "voice"],
+      "default": "text",
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "crisis"],
+      "default": "medium",
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "searching",
+        "matched",
+        "awaiting",
+        "active",
+        "completed",
+        "cancelled",
+        "escalated",
+      ],
+      "default": "searching",
+    },
+    "matched_listener_id": {
+      "type": "string",
+    },
+    "queue_position": {
+      "type": "number",
+      "default": 0,
+    },
+    "estimated_wait_seconds": {
+      "type": "number",
+      "default": 0,
+    },
+    "priority": {
+      "type": "boolean",
+      "default": false,
+    },
+    "note": {
+      "type": "string",
+    },
+  },
+  "required": ["seeker_id", "topic_id"],
+}

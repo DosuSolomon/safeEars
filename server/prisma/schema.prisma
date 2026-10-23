@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                        String    @id @default(cuid())
+  email                     String    @unique
+  full_name                 String?
+  password_hash             String?
+  email_verified            Boolean   @default(false)
+  role                      String    @default("seeker")
+  nickname                  String?
+  bio                       String?
+  support_topics            String[]  @default([])
+  communication_preference  String    @default("text")
+  privacy_level             String    @default("anonymous")
+  theme_preference          String    @default("light")
+  is_available              Boolean   @default(false)
+  profile_complete          Boolean   @default(false)
+  verification_status       String    @default("pending")
+  average_rating            Float     @default(0)
+  sessions_completed        Int       @default(0)
+  otp_hash                  String?
+  otp_expires_at            DateTime?
+  password_reset_hash       String?
+  password_reset_expires_at DateTime?
+  created_date              DateTime  @default(now())
+  updated_date              DateTime  @updatedAt
+}
+
+model SupportTopic {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  icon         String?
+  category     String   @default("emotional")
+  is_active    Boolean  @default(true)
+  created_date DateTime @default(now())
+  updated_date DateTime @updatedAt
+}
+
+model SessionRequest {
+  id                     String   @id @default(cuid())
+  seeker_id              String
+  seeker_nickname        String?
+  topic_id               String
+  topic_name             String?
+  session_type           String   @default("text")
+  urgency                String   @default("medium")
+  status                 String   @default("searching")
+  matched_listener_id    String?
+  queue_position         Int      @default(0)
+  estimated_wait_seconds Int      @default(0)
+  priority               Boolean  @default(false)
+  note                   String?
+  created_date           DateTime @default(now())
+  updated_date           DateTime @updatedAt
+}
+
+model Session {
+  id               String    @id @default(cuid())
+  request_id       String?
+  seeker_id        String
+  seeker_nickname  String?
+  listener_id      String
+  listener_name    String?
+  topic_id         String?
+  topic_name       String?
+  session_type     String    @default("text")
+  status           String    @default("active")
+  started_at       DateTime?
+  ended_at         DateTime?
+  duration_seconds Int       @default(0)
+  messages         Json      @default("[]")
+  rating           Float?
+  feedback         String?
+  escalated        Boolean   @default(false)
+  created_date     DateTime  @default(now())
+  updated_date     DateTime  @updatedAt
+}
+
+model ListenerApplication {
+  id                  String    @id @default(cuid())
+  applicant_id        String?
+  full_name           String
+  email               String
+  applied_role        String    @default("listener")
+  credentials         String?
+  expertise_topics    String[]  @default([])
+  availability        String?
+  bio                 String?
+  agreed_safeguarding Boolean   @default(false)
+  status              String    @default("pending")
+  review_notes        String?
+  reviewed_at         DateTime?
+  reviewer_id         String?
+  created_date        DateTime  @default(now())
+  updated_date        DateTime  @updatedAt
+}
+
+model Plan {
+  id                String   @id @default(cuid())
+  name              String
+  description       String?
+  price_ngn         Float    @default(0)
+  billing_cycle     String   @default("monthly")
+  trial_days        Int      @default(0)
+  voice_minutes     Int      @default(0)
+  priority_matching Boolean  @default(false)
+  instant_matching  Boolean  @default(false)
+  encrypted_access  Boolean  @default(false)
+  clinical_access   Boolean  @default(false)
+  features          String[] @default([])
+  is_active         Boolean  @default(true)
+  sort_order        Int      @default(0)
+  created_date      DateTime @default(now())
+  updated_date      DateTime @updatedAt
+}
+
+model Subscription {
+  id            String    @id @default(cuid())
+  user_id       String
+  plan_id       String
+  plan_name     String?
+  status        String    @default("trial")
+  started_at    DateTime?
+  trial_ends_at DateTime?
+  renews_at     DateTime?
+  price_ngn     Float     @default(0)
+  created_date  DateTime  @default(now())
+  updated_date  DateTime  @updatedAt
+}
+
+model Rating {
+  id              String   @id @default(cuid())
+  session_id      String
+  seeker_id       String
+  listener_id     String
+  stars           Int      @default(5)
+  comment         String?
+  would_follow_up Boolean  @default(false)
+  created_date    DateTime @default(now())
+  updated_date    DateTime @updatedAt
+}
+
+model SafetyReport {
+  id           String   @id @default(cuid())
+  session_id   String?
+  reporter_id  String
+  reason       String
+  severity     String   @default("medium")
+  status       String   @default("open")
+  notes        String?
+  created_date DateTime @default(now())
+  updated_date DateTime @updatedAt
+}
+
+model Notification {
+  id           String   @id @default(cuid())
+  user_id      String
+  type         String?
+  title        String
+  body         String?
+  read         Boolean  @default(false)
+  created_date DateTime @default(now())
+  updated_date DateTime @updatedAt
+}
+
+model ResourceArticle {
+  id           String   @id @default(cuid())
+  title        String
+  category     String   @default("self_help")
+  summary      String?
+  body         String?
+  icon         String?
+  is_public    Boolean  @default(true)
+  sort_order   Int      @default(0)
+  created_date DateTime @default(now())
+  updated_date DateTime @updatedAt
+}

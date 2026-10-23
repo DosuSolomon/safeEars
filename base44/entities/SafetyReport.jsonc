@@ -1,0 +1,29 @@
+{
+  "name": "SafetyReport",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+    },
+    "reporter_id": {
+      "type": "string",
+    },
+    "reason": {
+      "type": "string",
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "default": "medium",
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open", "reviewing", "resolved", "escalated"],
+      "default": "open",
+    },
+    "notes": {
+      "type": "string",
+    },
+  },
+  "required": ["reporter_id", "reason"],
+}

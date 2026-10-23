@@ -1,0 +1,32 @@
+{
+  "name": "ResourceArticle",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+    },
+    "category": {
+      "type": "string",
+      "enum": ["exercise", "self_help", "faq", "crisis"],
+      "default": "self_help",
+    },
+    "summary": {
+      "type": "string",
+    },
+    "body": {
+      "type": "string",
+    },
+    "icon": {
+      "type": "string",
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0,
+    },
+  },
+  "required": ["title", "category"],
+}

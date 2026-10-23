@@ -1,0 +1,60 @@
+{
+  "name": "Plan",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+    },
+    "description": {
+      "type": "string",
+    },
+    "price_ngn": {
+      "type": "number",
+      "default": 0,
+    },
+    "billing_cycle": {
+      "type": "string",
+      "enum": ["one_time", "monthly", "quarterly"],
+      "default": "monthly",
+    },
+    "trial_days": {
+      "type": "number",
+      "default": 0,
+    },
+    "voice_minutes": {
+      "type": "number",
+      "default": 0,
+    },
+    "priority_matching": {
+      "type": "boolean",
+      "default": false,
+    },
+    "instant_matching": {
+      "type": "boolean",
+      "default": false,
+    },
+    "encrypted_access": {
+      "type": "boolean",
+      "default": false,
+    },
+    "clinical_access": {
+      "type": "boolean",
+      "default": false,
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+      },
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0,
+    },
+  },
+  "required": ["name"],
+}

@@ -1,0 +1,56 @@
+{
+  "name": "ListenerApplication",
+  "type": "object",
+  "properties": {
+    "applicant_id": {
+      "type": "string",
+    },
+    "full_name": {
+      "type": "string",
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+    },
+    "applied_role": {
+      "type": "string",
+      "enum": ["listener", "therapist"],
+      "default": "listener",
+    },
+    "credentials": {
+      "type": "string",
+    },
+    "expertise_topics": {
+      "type": "array",
+      "items": {
+        "type": "string",
+      },
+    },
+    "availability": {
+      "type": "string",
+    },
+    "bio": {
+      "type": "string",
+    },
+    "agreed_safeguarding": {
+      "type": "boolean",
+      "default": false,
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected", "suspended"],
+      "default": "pending",
+    },
+    "review_notes": {
+      "type": "string",
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time",
+    },
+    "reviewer_id": {
+      "type": "string",
+    },
+  },
+  "required": ["full_name", "email", "applied_role"],
+}

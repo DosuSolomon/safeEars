@@ -1,0 +1,79 @@
+{
+  "name": "Session",
+  "type": "object",
+  "properties": {
+    "request_id": {
+      "type": "string",
+    },
+    "seeker_id": {
+      "type": "string",
+    },
+    "seeker_nickname": {
+      "type": "string",
+    },
+    "listener_id": {
+      "type": "string",
+    },
+    "listener_name": {
+      "type": "string",
+    },
+    "topic_id": {
+      "type": "string",
+    },
+    "topic_name": {
+      "type": "string",
+    },
+    "session_type": {
+      "type": "string",
+      "enum": ["text", "voice"],
+      "default": "text",
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "completed", "cancelled", "escalated"],
+      "default": "active",
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time",
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 0,
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "enum": ["seeker", "listener"],
+          },
+          "text": {
+            "type": "string",
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+          },
+        },
+      },
+    },
+    "rating": {
+      "type": "number",
+    },
+    "feedback": {
+      "type": "string",
+    },
+    "escalated": {
+      "type": "boolean",
+      "default": false,
+    },
+  },
+  "required": ["seeker_id", "listener_id"],
+}

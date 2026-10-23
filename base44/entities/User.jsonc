@@ -1,0 +1,59 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": ["admin", "seeker", "listener", "therapist"],
+      "default": "seeker",
+    },
+    "nickname": {
+      "type": "string",
+    },
+    "bio": {
+      "type": "string",
+    },
+    "support_topics": {
+      "type": "array",
+      "items": {
+        "type": "string",
+      },
+    },
+    "communication_preference": {
+      "type": "string",
+      "enum": ["text", "voice"],
+      "default": "text",
+    },
+    "privacy_level": {
+      "type": "string",
+      "enum": ["anonymous", "pseudonymous"],
+      "default": "anonymous",
+    },
+    "theme_preference": {
+      "type": "string",
+      "enum": ["light", "dark", "contrast"],
+      "default": "light",
+    },
+    "is_available": {
+      "type": "boolean",
+      "default": false,
+    },
+    "profile_complete": {
+      "type": "boolean",
+      "default": false,
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected", "suspended"],
+      "default": "pending",
+    },
+    "average_rating": {
+      "type": "number",
+      "default": 0,
+    },
+    "sessions_completed": {
+      "type": "number",
+      "default": 0,
+    },
+  },
+}

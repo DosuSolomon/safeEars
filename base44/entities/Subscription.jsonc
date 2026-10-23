@@ -1,0 +1,37 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+    },
+    "plan_id": {
+      "type": "string",
+    },
+    "plan_name": {
+      "type": "string",
+    },
+    "status": {
+      "type": "string",
+      "enum": ["trial", "active", "cancelled", "past_due", "expired"],
+      "default": "trial",
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+    },
+    "trial_ends_at": {
+      "type": "string",
+      "format": "date-time",
+    },
+    "renews_at": {
+      "type": "string",
+      "format": "date-time",
+    },
+    "price_ngn": {
+      "type": "number",
+      "default": 0,
+    },
+  },
+  "required": ["user_id", "plan_id"],
+}
