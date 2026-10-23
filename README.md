@@ -98,3 +98,17 @@ deployment health checks.
 
 The database password supplied for setup should be rotated before production
 use and stored only in the hosting provider's secret environment configuration.
+
+For Render, set the service's **Root Directory** to the repository root (the
+directory containing this README and the root `package.json`), not `server`.
+Use the following commands:
+
+- **Build Command:** `npm install && npm --prefix server install && npm run build`
+- **Start Command:** `npm start`
+
+The root `package.json` must be included in the deployed commit; its `start`
+script launches `server/src/index.js`. If Render still reports `Missing script:
+"start"`, verify the service is using the correct repository/branch and root
+directory, then deploy the commit containing this start script. The API service
+does not serve the Vite frontend, so deploy `dist` separately as a Render Static
+Site or another frontend host, and set `VITE_API_URL` to the API origin.
