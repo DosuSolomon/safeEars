@@ -103,12 +103,16 @@ For Render, set the service's **Root Directory** to the repository root (the
 directory containing this README and the root `package.json`), not `server`.
 Use the following commands:
 
-- **Build Command:** `npm install && npm --prefix server install && npm run build`
+- **Build Command:** `npm install && npm --prefix server install --include=dev && npm run db:generate && npm run build`
 - **Start Command:** `npm start`
 
 The root `package.json` must be included in the deployed commit; its `start`
-script launches `server/src/index.js`. If Render still reports `Missing script:
-"start"`, verify the service is using the correct repository/branch and root
-directory, then deploy the commit containing this start script. The API service
+script launches `server/src/index.js`. The build explicitly generates the
+Prisma Client from `server/prisma/schema.prisma`; this is required for the
+`@prisma/client` import at runtime. Ensure `DATABASE_URL` is configured in
+Render so Prisma's config can load during generation. If Render still reports
+`Missing script: "start"`, verify the service is using the correct
+repository/branch and root directory, then deploy the commit containing this
+start script. The API service
 does not serve the Vite frontend, so deploy `dist` separately as a Render Static
 Site or another frontend host, and set `VITE_API_URL` to the API origin.
