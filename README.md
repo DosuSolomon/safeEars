@@ -98,6 +98,8 @@ deployment health checks.
 
 The database password supplied for setup should be rotated before production
 use and stored only in the hosting provider's secret environment configuration.
+The committed `server/.env.example` contains placeholders only; rotate any real
+credentials that were previously used in that local example file.
 
 For Render, set the service's **Root Directory** to the repository root (the
 directory containing this README and the root `package.json`), not `server`.
@@ -109,8 +111,13 @@ Use the following commands:
 The root `package.json` must be included in the deployed commit; its `start`
 script launches `server/src/index.js`. The build explicitly generates the
 Prisma Client from `server/prisma/schema.prisma`; this is required for the
-`@prisma/client` import at runtime. Ensure `DATABASE_URL` is configured in
-Render so Prisma's config can load during generation. If Render still reports
+`@prisma/client` import at runtime. At startup, the backend generates Prisma
+Client and runs `prisma migrate deploy` before starting the API, so the
+checked-in database tables are created/updated and startup fails explicitly if
+migration fails. Set `DATABASE_URL` in Render to the PostgreSQL connection
+string (including `?sslmode=require` for Render PostgreSQL); never use the
+placeholder from `.env.example`. Ensure the variable is configured so Prisma's
+config can load during generation and migration. If Render still reports
 `Missing script: "start"`, verify the service is using the correct
 repository/branch and root directory, then deploy the commit containing this
 start script. The API service

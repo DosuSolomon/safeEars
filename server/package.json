@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "node --watch src/index.js",
+    "prestart": "npm run db:generate && npm run db:migrate",
     "start": "node src/index.js",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
@@ -24,9 +25,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^10.2.1",
+    "prisma": "^7.10.1",
     "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "prisma": "^7.10.1"
   }
 }
