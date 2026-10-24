@@ -126,3 +126,11 @@ serves the frontend from `dist`, so the Render web-service URL is also the app
 URL. Set `FRONTEND_URL` to that exact service origin and `API_PUBLIC_URL` to
 that origin followed by `/api`. The default `VITE_API_URL` uses same-origin
 `/api`; a separate frontend deployment is not required.
+
+For Google sign-in, set Render's `API_PUBLIC_URL` to
+`https://safeears.onrender.com/api` (without a port, query, or trailing path),
+and add this exact URL to the Google OAuth client's **Authorized redirect URIs**:
+`https://safeears.onrender.com/api/auth/google/callback`. The redirect URI must
+match exactly. If code exchange fails, Render logs now include Google's
+sanitized OAuth error code/description; do not share callback URLs containing
+the one-time `code` or `state` parameters.

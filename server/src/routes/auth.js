@@ -56,6 +56,27 @@ async function sendVerificationCode(user) {
   });
 }
 
+function getGoogleCallbackUrl() {
+  const apiUrl = new URL(process.env.API_PUBLIC_URL);
+  const apiPath = apiUrl.pathname.replace(/\/+$/, "");
+  const isLocalDevelopmentUrl =
+    process.env.NODE_ENV !== "production" &&
+    apiUrl.protocol === "http:" &&
+    ["localhost", "127.0.0.1"].includes(apiUrl.hostname);
+  if (
+    (apiUrl.protocol !== "https:" && !isLocalDevelopmentUrl) ||
+    apiUrl.search ||
+    apiUrl.hash ||
+    apiPath !== "/api"
+  ) {
+    throw Object.assign(
+      new Error("Google OAuth requires API_PUBLIC_URL to be the HTTPS API base URL ending in /api."),
+      { status: 500 },
+    );
+  }
+  return `${apiUrl.origin}${apiPath}/auth/google/callback`;
+}
+
 router.post("/register", authLimiter, async (req, res, next) => {
   try {
     const { email, password } = credentialsSchema.parse(req.body);
@@ -226,7 +247,7 @@ router.get("/google", (req, res) => {
   const state = signState({ nonce: createOpaqueToken(), returnTo });
   const authorizationUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   authorizationUrl.searchParams.set("client_id", process.env.GOOGLE_CLIENT_ID);
-  authorizationUrl.searchParams.set("redirect_uri", `${process.env.API_PUBLIC_URL}/auth/google/callback`);
+  authorizationUrl.searchParams.set("redirect_uri", getGoogleCallbackUrl());
   authorizationUrl.searchParams.set("response_type", "code");
   authorizationUrl.searchParams.set("scope", "openid email profile");
   authorizationUrl.searchParams.set("state", state);
@@ -236,6 +257,9 @@ router.get("/google", (req, res) => {
 
 router.get("/google/callback", async (req, res, next) => {
   try {
+    if (typeof req.query.error === "string") {
+      return res.status(400).send("Google sign-in was cancelled or denied.");
+    }
     if (typeof req.query.code !== "string" || typeof req.query.state !== "string") {
       return res.status(400).send("Invalid Google sign-in response.");
     }
@@ -248,7 +272,7 @@ router.get("/google/callback", async (req, res, next) => {
     if (destination.origin !== new URL(process.env.FRONTEND_URL).origin) {
       return res.status(400).send("Invalid sign-in return URL.");
     }
-    const redirectUri = `${process.env.API_PUBLIC_URL}/auth/google/callback`;
+    const redirectUri = getGoogleCallbackUrl();
     const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -261,7 +285,15 @@ router.get("/google/callback", async (req, res, next) => {
       }),
     });
     if (!tokenResponse.ok) {
-      throw new Error("Google authorization failed.");
+      const providerError = await tokenResponse.json().catch(() => ({}));
+      console.error("Google OAuth token exchange failed:", {
+        status: tokenResponse.status,
+        error: providerError.error,
+        error_description: providerError.error_description,
+      });
+      return res
+        .status(502)
+        .send("Google sign-in failed. Check that Render's API_PUBLIC_URL and the Google OAuth redirect URI match exactly.");
     }
     const googleTokens = await tokenResponse.json();
     const profileResponse = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
