@@ -109,7 +109,8 @@ Use the following commands:
 - **Start Command:** `npm start`
 
 The root `package.json` must be included in the deployed commit; its `start`
-script launches `server/src/index.js`. The build explicitly generates the
+script launches the API, which serves the built Vite app at `/` and handles
+client-side routes while keeping `/api` endpoints separate. The build explicitly generates the
 Prisma Client from `server/prisma/schema.prisma`; this is required for the
 `@prisma/client` import at runtime. At startup, the backend generates Prisma
 Client and runs `prisma migrate deploy` before starting the API, so the
@@ -121,5 +122,7 @@ config can load during generation and migration. If Render still reports
 `Missing script: "start"`, verify the service is using the correct
 repository/branch and root directory, then deploy the commit containing this
 start script. The API service
-does not serve the Vite frontend, so deploy `dist` separately as a Render Static
-Site or another frontend host, and set `VITE_API_URL` to the API origin.
+serves the frontend from `dist`, so the Render web-service URL is also the app
+URL. Set `FRONTEND_URL` to that exact service origin and `API_PUBLIC_URL` to
+that origin followed by `/api`. The default `VITE_API_URL` uses same-origin
+`/api`; a separate frontend deployment is not required.

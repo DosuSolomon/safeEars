@@ -4,12 +4,15 @@ import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import { ZodError } from "zod";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { prisma } from "./lib/prisma.js";
 import authRoutes from "./routes/auth.js";
 import entityRoutes from "./routes/entities.js";
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
+const frontendDist = fileURLToPath(new URL("../../dist/", import.meta.url));
 
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL must be configured.");
@@ -62,6 +65,17 @@ app.get("/api/health", async (_req, res, next) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/entities", entityRoutes);
+
+app.use("/api", (_req, res) => {
+  res.status(404).json({ error: { message: "Route not found." } });
+});
+
+app.use(express.static(frontendDist));
+app.get("*", (_req, res, next) => {
+  res.sendFile(resolve(frontendDist, "index.html"), (error) => {
+    if (error) next(error);
+  });
+});
 
 app.use((_req, res) => {
   res.status(404).json({ error: { message: "Route not found." } });
