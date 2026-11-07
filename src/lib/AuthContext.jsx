@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
       if (error.status === 401 || error.status === 403) {
+        apiClient.auth.setToken(null);
         setAuthError({
           type: "auth_required",
           message: "Authentication required",
